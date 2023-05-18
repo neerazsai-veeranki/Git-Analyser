@@ -1,9 +1,7 @@
 extends layout
 
 block content
-  h1 Profile details
-  p Welcome to #{title}
-  h2 Card
+  h1 Profile Details
   .card-group
      .col-sm-4
        .shadow-none.p-3.mb-3.bg-light.rounded
@@ -14,10 +12,15 @@ block content
              .col-md-8
                .card-body
                   p.card-text Full Name:
-                  input#cell2Input.mt-auto(type='text' name='Full Name')
+                  input#FullName.mt-auto(type='text' name='Full Name')
+                  p.card-text UserName:
+                  input#UserName.mt-auto(type='text' name='UserName')
                   p.card-text Profile Name:
-                  input#cell2Input.mt-auto(type='text' name='Profile Name')
+                  input#ProfileName.mt-auto(type='text' name='Profile Name')
                   p.card-text Location:
-                  input#cell2Input.mt-auto(type='text' name='Location')
+                  button.btn
+                    i.fa.fa-location-arrow
+                        Home
+
                   p.card-text Followers:
-                  input#cell2Input.mt-auto(type='text' name='Followers') 
+                  input#Followers.mt-auto(type='text' name='Followers') 
