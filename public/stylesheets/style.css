@@ -114,15 +114,14 @@ a {
 /* .text {
   padding: 2px 16px;
 } */
-.container {
+
+/* .container {
   display: flex;
-  /* align-items: center;  */
-  /* grid-template-columns: 1fr 1fr 1fr; */
   column-gap: 5px;
   flex-direction: row;
   justify-content: space-between;
   justify-content: flex-start;
- }
+ } */
 
 .text {
   /* font-size: 40px; */
@@ -146,3 +145,10 @@ a {
   background-color: green;
 }
 
+.card-fullname {
+  font-size: 20pt;
+}
+
+.card-username {
+  font-size: 10pt;
+}

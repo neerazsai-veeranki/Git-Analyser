@@ -3,31 +3,20 @@ extends layout
 block content
   h1 Profile Details
   .card-group
-     .col-sm-5
-       .shadow-none.p-3.mb-3.bg-light.rounded
-         .card.text-white.bg-warning.mb-3(style='max-width: 400px;')
-           .row.no-gutters
-             .col-md-4
-               img.card-img(src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' alt='profile')
-             .col-md-8
-               .card-body
-                  p.card-text Full Name:
-                    .input-sm
-                      input#FullName.mt-auto(type='text' name='Full Name')
-                    .input-sm
-                      p.card-text UserName:
-                    .input-sm
-                      input#UserName.mt-auto(type='text' name='UserName')
-                    .input-sm
-                      p.card-text Profile Name:
-                    .input-sm
-                      input#ProfileName.mt-auto(type='text' name='Profile Name')
-                    .input-sm
-                      p.card-text Location:
-                      button.btn
-                        i.fa.fa-location-arrow
-                            Home
-                    .input-sm
-                      p.card-text Followers:
-                    .input-sm
-                      input#Followers.mt-auto(type='text' name='Followers') 
+    .shadow-none.p-3.mb-3.bg-light.rounded
+      .card.text-dark.mb-3(style='max-width: 400px;')
+        .row.no-gutters
+          .col-md-4
+            img.card-img(src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' alt='profile')
+          .col-md-8
+            .card-body
+              .input-sm
+                p.card-text.card-fullname Nikitha vedanth
+              .input-sm
+                p.card-text.card-username @nikki
+              i.material-icons.inline-icon pin_drop
+              span   Maryville 
+              br
+              i.material-icons.inline-icon people 
+              span  123 Followers 
+

@@ -1,6 +1,11 @@
 extends layout
 
 block content
+
+  include header
+
+  br
+
   h1= Repositories
   h4 List of Repositories
   .input-group.rounded
@@ -17,8 +22,8 @@ block content
         p.card-text GitHub Analyser.
         button.btn.btn-outline-info.btn-sm(type='button') Info
 
-       
-
+  p.footer Copyright © 2023 My GitHub Analyser
+  
 
 
 
