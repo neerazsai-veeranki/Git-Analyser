@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1= Repositories
+  h4 List of Repositories
+  .input-group.rounded
+  input.form-control.rounded(type='search' placeholder='Search for repository' aria-label='Search')
+  br
+  .row
+  .col-sm-6
+    .card
+      .card-body
+        a.link-opacity-50-hover(href='#') Repository Name
+        .col.text-right
+          span.badge.badge-primary Label
+          i.fa-solid.fa-flag
+        p.card-text GitHub Analyser.
+        button.btn.btn-outline-info.btn-sm(type='button') Info
+
+       
+
+
+
+
+
