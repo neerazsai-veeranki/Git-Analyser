@@ -1,10 +1,20 @@
-extends layout
+extends header
 
 block content
-  
-  h1(class="header")  GITHUB ANALYZER 
-  
-  input(type="text" placeholder="Enter User Name Or Organization" class="border" style="width: 70%")
-  button.button
-    span SEARCH
 
+  include header 
+
+  div.container
+      form.form-inline.mt-4(action="/getProfiles", method="POST")
+        div.input-group(style='width: 100%')
+          input.form-control(name='keyword', type='text', placeholder='Enter User Name Or Organization')
+          div.input-group-append
+            button.btn.btn-primary(type='submit', style='width: 100%')
+              i.bi.bi-search
+  //- form(action="/getProfiles" method="POST")
+  //-   input(name="keyword", type="text" placeholder="Enter User Name Or Organization" class="border" style="width: 70%")
+  //-   button.button
+  //-     span SEARCH
+
+
+  script(src='/routes/search.js')

@@ -6,4 +6,8 @@ router.get('/', function(req, res, next) {
   res.render('home', { title: 'Express' });
 });
 
+router.post('/getProfiles', function(req, res) { 
+  console.log(req.body.keyword)
+});
+
 module.exports = router;
