@@ -5,11 +5,11 @@ block content
   include header 
 
   div.container
-    form.form-inline.mt-4(action="/getProfiles" method="POST")
+    form.form-inline.mt-4(role='form', action="/getProfiles", method="post")
       div.input-group(style='width: 100%')
-        input.form-control(name='keyword' type='text' placeholder='Enter User Name Or Organization')
-        div.input-group-append
-          button.btn.btn-primary(type='submit' style='width: 100%')
+        input.form-control(name='keyword', type='text', placeholder='Enter User Name Or Organization')
+        div.input-group-append(style='width: 10%')
+          button.btn.btn-primary(type='submit', style='width: 100%')
             i.bi.bi-search
   //- form(action="/getProfiles" method="POST")
   //-   input(name="keyword" type="text" placeholder="Enter User Name Or Organization" class="border" style="width: 70%")
