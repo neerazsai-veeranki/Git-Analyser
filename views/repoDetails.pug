@@ -1,0 +1,96 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title GitHub Analysis
+    meta(name="description", content="")
+    meta(name="keywords", content="")
+    link(rel="stylesheet", href="/stylesheets/style.css")
+   
+      
+    // JavaScript code
+    script.
+      function openPopup(pugFile) {
+        var popup = document.getElementById("popup");
+        var iframe = document.getElementById("popup-iframe");
+        iframe.src = pugFile;
+        popup.style.display = "block";
+      }
+
+      function closePopup() {
+        var popup = document.getElementById("popup");
+        var iframe = document.getElementById("popup-iframe");
+        iframe.src = "";
+        popup.style.display = "none";
+      }
+
+  body
+    header#header
+      .container
+        // Header content...
+
+    section#portfolio.portfolio
+      .container
+        .section-title
+          h2 REPO DETAILS
+
+        .row
+          // Repo details content...
+
+        .row.portfolio-container
+          .col-lg-4.col-md-6.portfolio-item.filter-app(onclick="openPopup('/repodetails/portfolio-details')")
+            .portfolio-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="")
+              .portfolio-info
+                h4 COMMITS
+                .portfolio-links
+                  a(href="#" title="Portfolio Details")
+                    i.bx.bx-link
+          .col-lg-4.col-md-6.portfolio-item.filter-app(onclick="openPopup('/repodetails/portfolio-details-fork')")
+            .portfolio-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="")
+              .portfolio-info
+                h4 FORKS
+                .portfolio-links
+                  a(href="#" title="Portfolio Details")
+                    i.bx.bx-link
+          .col-lg-4.col-md-6.portfolio-item.filter-app(onclick="openPopup('/repodetails/portfolio-details')")
+            .portfolio-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="")
+              .portfolio-info
+                h4 LANGUAGES
+                .portfolio-links
+                  a(href="#" title="Portfolio Details")
+                    i.bx.bx-link
+          .col-lg-4.col-md-6.portfolio-item.filter-app(onclick="openPopup('/repodetails/portfolio-details')")
+            .portfolio-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="")
+              .portfolio-info
+                h4 CONTRIBUTORS
+                .portfolio-links
+                  a(href="#" title="Portfolio Details")
+                    i.bx.bx-link
+          .col-lg-4.col-md-6.portfolio-item.filter-app(onclick="openPopup('/repodetails/portfolio-details')")
+            .portfolio-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="")
+              .portfolio-info
+                h4 PULL REQUESTS
+                .portfolio-links
+                  a(href="#" title="Portfolio Details")
+                    i.bx.bx-link
+          .col-lg-4.col-md-6.portfolio-item.filter-app(onclick="openPopup('/repodetails/portfolio-details')")
+            .portfolio-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="")
+              .portfolio-info
+                h4 ISSUES
+                .portfolio-links
+                  a(href="#" title="Portfolio Details")
+                    i.bx.bx-link
+
+          
+
+    #popup
+      .modal-content
+        span.close(onclick="closePopup()") &times;
+        iframe#popup-iframe(src="")
