@@ -154,6 +154,8 @@ a {
 }
 
 
+
+/*Repo Details*/
 * {
   box-sizing: border-box;
 }
@@ -175,32 +177,32 @@ body {
   margin-bottom: 40px;
 }
 
-.portfolio-container {
+.repodetails-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 
-.portfolio-item {
+.repodetails-item {
   width: calc(33.33% - 20px);
   margin-bottom: 40px;
   cursor: pointer;
 }
 
-.portfolio-item .portfolio-wrap {
+.repodetails-item .repodetails-wrap {
   position: relative;
   overflow: hidden;
   border-radius: 4px;
 }
 
-.portfolio-item img {
+.repodetails-item img {
   width: 100%;
   height: auto;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.portfolio-item h4 {
+.repodetails-item h4 {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -215,11 +217,11 @@ body {
   transition: opacity 0.3s ease;
 }
 
-.portfolio-item:hover img {
+.repodetails-item:hover img {
   transform: scale(1.1);
 }
 
-.portfolio-item:hover h4 {
+.repodetails-item:hover h4 {
   opacity: 1;
 }
 
