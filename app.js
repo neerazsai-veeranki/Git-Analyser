@@ -8,7 +8,6 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var detailRouter = require('./routes/details');
 var profileRouter = require('./routes/profile');
-var homeRouter  = require('./routes/home');
 var cardsRouter = require('./routes/cards');
 var repoDetailsRouter = require('./routes/repoDetails');
 
