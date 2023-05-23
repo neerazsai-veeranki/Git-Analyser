@@ -1,0 +1,90 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title GitHub Analysis
+    meta(name="description", content="")
+    meta(name="keywords", content="")
+    link(rel="stylesheet", href="/stylesheets/style.css")
+   
+    script.
+      function openPopup(pugFile) {
+        var popup = document.getElementById("popup");
+        var iframe = document.getElementById("popup-iframe");
+        iframe.src = pugFile;
+        popup.style.display = "block";
+      }
+
+      function closePopup() {
+        var popup = document.getElementById("popup");
+        var iframe = document.getElementById("popup-iframe");
+        iframe.src = "";
+        popup.style.display = "none";
+      }
+
+  body
+    header#header
+      .container
+    section#repodetails.repodetails
+      .container
+        .section-title
+          h2 REPO DETAILS
+        .row
+
+        .row.repodetails-container
+          .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/commits')")
+            .repodetails-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="COMMITS")
+              .repodetails-info
+                h4 COMMITS
+                .repodetails-links
+                  a(href="#" title="repodetails Details")
+                    i.bx.bx-link
+          .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/forks')")
+            .repodetails-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="FORKS")
+              .repodetails-info
+                h4 FORKS
+                .repodetails-links
+                  a(href="#" title="repodetails Details")
+                    i.bx.bx-link
+          .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/languages')")
+            .repodetails-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="LANGUAGES")
+              .repodetails-info
+                h4 LANGUAGES
+                .repodetails-links
+                  a(href="#" title="repodetails Details")
+                    i.bx.bx-link
+          .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/contributors')")
+            .repodetails-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="CONTRIBUTORS")
+              .repodetails-info
+                h4 CONTRIBUTORS
+                .repodetails-links
+                  a(href="#" title="repodetails Details")
+                    i.bx.bx-link
+          .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/pullrequests')")
+            .repodetails-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="PULL REQUESTS")
+              .repodetails-info
+                h4 PULL REQUESTS
+                .repodetails-links
+                  a(href="#" title="repodetails Details")
+                    i.bx.bx-link
+          .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/issues')")
+            .repodetails-wrap
+              img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg", alt="ISSUES")
+              .repodetails-info
+                h4 ISSUES
+                .repodetails-links
+                  a(href="#" title="repodetails Details")
+                    i.bx.bx-link
+
+          
+
+    #popup
+      .modal-content
+        span.close(onclick="closePopup()") &times;
+        iframe#popup-iframe(src="")

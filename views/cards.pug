@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1 Profile Details
+  .card-group
+    .shadow-none.p-3.mb-3.bg-light.rounded
+      .card.text-dark.mb-3(style='max-width: 400px;')
+        .row.no-gutters
+          .col-md-4
+            img.card-img(src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' alt='profile')
+          .col-md-8
+            .card-body
+              .input-sm
+                p.card-text.card-fullname Nikitha vedanth
+              .input-sm
+                p.card-text.card-username @nikki
+              i.material-icons.inline-icon pin_drop
+              span   Maryville 
+              br
+              i.material-icons.inline-icon people 
+              span  123 Followers 
+
