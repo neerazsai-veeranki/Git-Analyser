@@ -11,11 +11,17 @@ block content
         div.input-group-append(style='width: 10%')
           button.btn.btn-primary(type='submit', style='width: 100%')
             i.bi.bi-search
-  //- form(action="/getProfiles" method="POST")
-  //-   input(name="keyword" type="text" placeholder="Enter User Name Or Organization" class="border" style="width: 70%")
-  //-   button.button
-  //-     span SEARCH
 
+  div.container
+    if result === null || typeof result === 'undefined'|| result.length === 0
+      p No profiles Found
+    else
+      p Resulted Profiles...
+      each item in result
+        .card
+          .card-body
+            h5.card-title= item.login
+            p.card-text= item.id
 
   script(src='/routes/search.js')
 
