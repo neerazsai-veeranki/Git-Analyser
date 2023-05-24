@@ -6,18 +6,15 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var detailRouter = require('./routes/details');
+var detailRouter = require('./routes/viewRepos');
 var profileRouter = require('./routes/profile');
 var cardsRouter = require('./routes/cards');
-develop-nikki
 var followersRouter = require('./routes/followers');
 var followingRouter = require('./routes/following');
 var fandfRouter = require('./routes/fandf');
 
 var repoDetailsRouter = require('./routes/repoDetails');
 
-
-main
 var app = express();
 
 // view engine setup
@@ -33,16 +30,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 // app.use('/home', homeRouter);
 app.use('/users', usersRouter);
-app.use('/details',detailRouter);
+app.use('/viewRepos',detailRouter);
 app.use('/viewProfile', profileRouter);
 app.use('/cards',cardsRouter);
-develop-nikki
 app.use('/followers',followersRouter);
 app.use('/following',followingRouter);
 app.use('/fandf',fandfRouter);
-
 app.use('/repodetails', repoDetailsRouter);
-main
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -8,30 +8,30 @@ block content
     div.container
         div.row
             div.col
-                h1 Fullname 
-                h5 Username
+                h1=result.login 
+                h5=result.login
                 main.markdown-body
-                img.avatar(class="img-thumbnail" src="https://avatars.githubusercontent.com/myusername" alt="Avatar" width="200" height="200")
+                img.avatar(class="img-thumbnail", src=result.avatar_url, alt="Avatar", width="200", height="200")
             div.col-6
                 div.spacer
                 div
                     i.material-icons.inline-icon format_list_bulleted
-                    span   Bio of the USER
+                    span=   result.bio
                 div 
                     i.material-icons.inline-icon pin_drop
-                    span   Location 
+                    span=   result.location 
                 br
                 div
 
                     a(href="#")
                         i.material-icons.inline-icon people 
-                        span  123 Followers 
+                        span   #{result.followers} Followers 
                     a(href="#") 
                         i.material-icons.inline-icon person_add 
-                        span  456 Following 
+                        span   #{result.following} Following 
                 br
                 p
-                    a(href="#") 34 Repositories 
+                    a(href='/viewRepos?id='+result.login) #{result.public_repos} Repositories 
 
             div.col
 

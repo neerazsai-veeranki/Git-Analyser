@@ -5,6 +5,7 @@ var request = require('request');
 require('dotenv').config(); 
 
 router.get('/', function(req, res, next) {
+  var result
   res.render('home', { title: 'Git-Analyser', result });
 });
 
@@ -23,11 +24,9 @@ router.post('/getProfiles', async function(req, res) {
     if (!error && response.statusCode === 200) {
       const result = JSON.parse(body).items
       res.render('home', { result })
-      // result.items.forEach(element => {
-        // });
-      } else {
-        console.log("Got an error: ", error, ", status code: ", response.statusCode)
-      }
+    } else {
+      console.log("Got an error: ", error, ", status code: ", response.statusCode)
+    }
   })
   
 });

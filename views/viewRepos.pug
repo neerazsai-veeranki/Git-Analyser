@@ -1,0 +1,29 @@
+extends layout
+
+block content
+
+  include header
+
+  h1= Repositories
+  div.container
+    h4 List of Repositories
+    .input-group.rounded
+    input.form-control(type='search' placeholder='Search for repository' aria-label='Search')
+    br
+    each item in result
+      .col
+        .card
+          .card-body
+            a.link-opacity-50-hover(href='/repoDetails')= item.full_name
+            .col.text-right
+              span.badge.badge-primary Label
+              i.fa-solid.fa-flag 
+            p.card-text= item.description
+            button.btn.btn-outline-info.btn-sm(type='button') Info
+
+  p.footer Copyright © 2023 My GitHub Analyser
+  
+
+
+
+
