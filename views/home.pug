@@ -1,0 +1,28 @@
+extends header
+
+block content
+
+  include header 
+
+  div.container
+    form.form-inline.mt-4(role='form', action="/getProfiles", method="post")
+      div.input-group(style='width: 100%')
+        input.form-control(name='keyword', type='text', placeholder='Enter User Name Or Organization')
+        div.input-group-append(style='width: 10%')
+          button.btn.btn-primary(type='submit', style='width: 100%')
+            i.bi.bi-search
+
+  div.container
+    if result === null || typeof result === 'undefined'|| result.length === 0
+      p No profiles Found
+    else
+      p Resulted Profiles...
+      each item in result
+        .card
+          .card-body
+            h5.card-title= item.login
+            p.card-text= item.id
+
+  script(src='/routes/search.js')
+
+  p.footer Copyright © 2023 My GitHub Analyser

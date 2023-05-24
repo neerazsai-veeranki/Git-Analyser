@@ -1,0 +1,39 @@
+extends header 
+
+block content
+
+    include header 
+    br
+    br
+    div.container
+        div.row
+            div.col
+                h1 Fullname 
+                h5 Username
+                main.markdown-body
+                img.avatar(class="img-thumbnail" src="https://avatars.githubusercontent.com/myusername" alt="Avatar" width="200" height="200")
+            div.col-6
+                div.spacer
+                div
+                    i.material-icons.inline-icon format_list_bulleted
+                    span   Bio of the USER
+                div 
+                    i.material-icons.inline-icon pin_drop
+                    span   Location 
+                br
+                div
+
+                    a(href="#")
+                        i.material-icons.inline-icon people 
+                        span  123 Followers 
+                    a(href="#") 
+                        i.material-icons.inline-icon person_add 
+                        span  456 Following 
+                br
+                p
+                    a(href="#") 34 Repositories 
+
+            div.col
+
+
+    p.footer Copyright © 2023 My GitHub Analyser
