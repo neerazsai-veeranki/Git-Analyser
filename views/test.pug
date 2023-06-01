@@ -1,0 +1,56 @@
+extends header 
+
+block content 
+
+    include header
+    br
+    nav
+      ul#sideMenu
+        li(id='menu1') Menu 1
+        li(id='menu2') Menu 2
+        li(id='menu3') Menu 3
+
+    div#contentContainer
+
+    p.footer Copyright © 2023 My GitHub Analyser
+
+
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        // Get menu items
+        var menuItems = document.querySelectorAll('#sideMenu li');
+
+        // Add click event listener to each menu item
+        menuItems.forEach(function(item) {
+          item.addEventListener('click', function() {
+            var menuItemId = this.id;
+            loadContent(menuItemId);
+          });
+        });
+
+        // Function to load content based on menu item clicked
+        function loadContent(menuItemId) {
+          // Clear existing content
+          var contentContainer = document.getElementById('contentContainer');
+          contentContainer.innerHTML = '';
+
+          // Load new content based on menu item clicked
+          switch (menuItemId) {
+            case 'menu1':
+              // Load content for Menu 1
+              contentContainer.innerHTML = '<h2>Menu 1 Content</h2>';
+              break;
+            case 'menu2':
+              // Load content for Menu 2
+              contentContainer.innerHTML = '<h2>Menu 2 Content</h2>';
+              break;
+            case 'menu3':
+              // Load content for Menu 3
+              contentContainer.innerHTML = '<h2>Menu 3 Content</h2>';
+              break;
+            default:
+              // Handle other menu items
+              break;
+          }
+        }
+      });

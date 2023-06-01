@@ -9,6 +9,11 @@ router.get('/', function(req, res, next) {
   res.render('home', { title: 'Git-Analyser', result });
 });
 
+router.get('/test', function(req, res, next) {
+  var result
+  res.render('test', { title: 'Git-Analyser', result });
+});
+
 router.get('/aboutus', function(req, res, next) {
   res.render('aboutUs', { title: 'About Us' });
 });
