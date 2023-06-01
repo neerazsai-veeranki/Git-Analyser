@@ -1,0 +1,21 @@
+extends header
+
+block content 
+
+    h1 Issues
+    br
+    each item in result
+      .col
+        .card
+          .card-body
+            a.link-opacity-50-hover(href='#')  #{item.title}
+            br
+            span Created By : 
+            a(href='/viewProfile?id='+item.user.login) #{item.user.login} 
+            br
+            - var date = new Date(item.created_at)
+            span Created On : #{date} 
+            .col.text-right
+            if item.fork
+              span.badge.badge-primary Forked
+            p.card-text= item.description

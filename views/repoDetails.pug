@@ -9,10 +9,12 @@ block content
   section#repodetails.repodetails
     .container
       .section-title
-        h2 REPO DETAILS
+        br
+        h2=result.full_name
       .row
       .row.repodetails-container
-        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/commits')")
+        - var commits_url = '/repodetails/commits/?id='+result.owner.login+'&repo='+result.name
+        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('" + commits_url + "')")
           .repodetails-wrap
             img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg" alt="COMMITS")
             .repodetails-info
@@ -20,7 +22,8 @@ block content
               .repodetails-links
                 a(href="#" title="repodetails Details")
                   i.bx.bx-link
-        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/forks')")
+        - var forks_url = '/repodetails/forks/?id='+result.owner.login+'&repo='+result.name
+        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('" + forks_url + "')")
           .repodetails-wrap
             img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg" alt="FORKS")
             .repodetails-info
@@ -28,7 +31,8 @@ block content
               .repodetails-links
                 a(href="#" title="repodetails Details")
                   i.bx.bx-link
-        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/languages')")
+        - var languages_url = '/repodetails/languages/?id='+result.owner.login+'&repo='+result.name
+        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('" + languages_url + "')")
           .repodetails-wrap
             img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg" alt="LANGUAGES")
             .repodetails-info
@@ -36,7 +40,8 @@ block content
               .repodetails-links
                 a(href="#" title="repodetails Details")
                   i.bx.bx-link
-        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/contributors')")
+        - var contributors_url = '/repodetails/contributors/?id='+result.owner.login+'&repo='+result.name
+        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('" + contributors_url + "')")
           .repodetails-wrap
             img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg" alt="CONTRIBUTORS")
             .repodetails-info
@@ -44,7 +49,8 @@ block content
               .repodetails-links
                 a(href="#" title="repodetails Details")
                   i.bx.bx-link
-        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/pullrequests')")
+        - var pullrequests_url = '/repodetails/pullrequests/?id='+result.owner.login+'&repo='+result.name
+        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('" + pullrequests_url + "')")
           .repodetails-wrap
             img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg" alt="PULL REQUESTS")
             .repodetails-info
@@ -52,7 +58,8 @@ block content
               .repodetails-links
                 a(href="#" title="repodetails Details")
                   i.bx.bx-link
-        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('/repodetails/issues')")
+        - var issues_url = '/repodetails/issues/?id='+result.owner.login+'&repo='+result.name
+        .col-lg-4.col-md-6.repodetails-item.filter-app(onclick="openPopup('" + pullrequests_url + "')")
           .repodetails-wrap
             img.img-fluid(src="https://wallpaperaccess.com/full/1129018.jpg" alt="ISSUES")
             .repodetails-info

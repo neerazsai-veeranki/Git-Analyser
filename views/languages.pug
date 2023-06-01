@@ -1,0 +1,13 @@
+extends header
+
+block content 
+
+    - var colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger']
+
+    .progress
+        each key in Object.keys(result)
+            - var randomColor = colors[Math.floor(Math.random() * colors.length)]
+            .progress-bar(role='progressbar', style=`width: ${result[key]}%`, aria-valuenow=`${result[key]}`, aria-valuemin='0', aria-valuemax='100')
+                span(class=randomColor) #{key}: #{result[key]}%
+            //-   | #{key}
+            

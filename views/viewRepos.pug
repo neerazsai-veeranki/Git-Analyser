@@ -14,12 +14,12 @@ block content
       .col
         .card
           .card-body
-            a.link-opacity-50-hover(href='/repoDetails')= item.full_name
+            a.link-opacity-50-hover(href='/repoDetails?id='+item.owner.login+'&repo='+item.name)= item.full_name
             .col.text-right
-              span.badge.badge-primary Label
-              i.fa-solid.fa-flag 
+            if item.fork
+              span.badge.badge-primary Forked
             p.card-text= item.description
-            button.btn.btn-outline-info.btn-sm(type='button') Info
+            //- button.btn.btn-outline-info.btn-sm(type='button') Info
 
   p.footer Copyright © 2023 My GitHub Analyser
   

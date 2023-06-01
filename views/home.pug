@@ -17,14 +17,25 @@ block content
     if typeof result === 'undefined'
       p
     else if result === null || result.length === 0
+      br
       p No profiles Found
     else
+      br
       p Resulted Profiles...
       each item in result
         a.card(href='/viewProfile?id='+item.login)
           .card-body
-            h5.card-title= item.login
-            p.card-text= item.id
+            .row
+              .d-flex.text-black
+                .flex-shrink-0
+                  img.rounded-circle(
+                    style="width: 80px; border-radius: 5px;" 
+                    alt="Generic placeholder image" 
+                    src=item.avatar_url
+                    )
+              .col
+                h5.card-title= item.login
+                p.card-text= item.id
 
   script(src='/routes/search.js')
 

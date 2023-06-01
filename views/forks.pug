@@ -13,39 +13,42 @@ html(lang="en")
         .container
           .row
             .portfolio-info
-              h3 Commit Details
-              p In GitHub, a commit represents a snapshot of changes made to a repository at a specific point in time. It includes the modified files, the author's information, a commit message, and a unique identifier (commit hash) to track and reference the changes.
-              hr
-              ul
-                li
-                  strong Commit ID:
-                  |  ed899a2f4b50b4370feeea94676502b42383c746
-                li
-                  strong Commit Date:
-                  |  2021-09-20T11:50:22.001+00:00
-                li
-                  strong Commit Message:
-                  |  Replace sanitize with escape once
-              hr
-              ul
-                li
-                  strong Commit ID:
-                  |  ed899a2f4b50b4370feeea94676502b42383c746
-                li
-                  strong Commit Date:
-                  |  2021-09-20T11:50:22.001+00:00
-                li
-                  strong Commit Message:
-                  |  Replace sanitize with escape once
-              hr
-              ul
-                li
-                  strong Commit ID:
-                  |  ed899a2f4b50b4370feeea94676502b42383c746
-                li
-                  strong Commit Date:
-                  |  2021-09-20T11:50:22.001+00:00
-                li
-                  strong Commit Message:
-                  |  Replace sanitize with escape once
-              hr
+              h3 Fork Details
+              p In GitHub, a "fork" refers to making a copy of a repository owned by another user or organization. When you fork a repository, you create your own copy of the repository in your GitHub account, allowing you to freely make changes to the codebase without affecting the original repository.
+              each item in result              
+                hr
+                ul
+                  li
+                    strong Forked By:
+                    a(href='/viewProfile?id='+item.owner.login)  #{item.owner.login}
+                  li
+                    strong Forked As:
+                    a(href='/repoDetails?id='+item.owner.login+'&repo='+item.name)  #{item.name}
+                  //- li
+                    strong Commit Message:
+                    |  Replace sanitize with escape once
+
+
+              //- hr
+              //- ul
+              //-   li
+              //-     strong Commit ID:
+              //-     |  ed899a2f4b50b4370feeea94676502b42383c746
+              //-   li
+              //-     strong Commit Date:
+              //-     |  2021-09-20T11:50:22.001+00:00
+              //-   li
+              //-     strong Commit Message:
+              //-     |  Replace sanitize with escape once
+              //- hr
+              //- ul
+              //-   li
+              //-     strong Commit ID:
+              //-     |  ed899a2f4b50b4370feeea94676502b42383c746
+              //-   li
+              //-     strong Commit Date:
+              //-     |  2021-09-20T11:50:22.001+00:00
+              //-   li
+              //-     strong Commit Message:
+              //-     |  Replace sanitize with escape once
+              //- hr

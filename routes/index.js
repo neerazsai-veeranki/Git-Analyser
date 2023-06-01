@@ -9,6 +9,10 @@ router.get('/', function(req, res, next) {
   res.render('home', { title: 'Git-Analyser', result });
 });
 
+router.get('/aboutus', function(req, res, next) {
+  res.render('aboutUs', { title: 'About Us' });
+});
+
 router.post('/getProfiles', async function(req, res) { 
   console.log(req.body.keyword)
   console.log(process.env.LIST_USERS)

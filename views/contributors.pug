@@ -1,0 +1,20 @@
+extends header
+
+block content 
+
+    h1 Contributors
+    br
+    each item in result
+        a.card(href='/viewProfile?id='+item.login)
+          .card-body
+            .row
+              .d-flex.text-black
+                .flex-shrink-0
+                  img.rounded-circle(
+                    style="width: 80px; border-radius: 5px;" 
+                    alt="Generic placeholder image" 
+                    src=item.avatar_url
+                    )
+              .col
+                h5.card-title= item.login
+                p.card-text= item.id
