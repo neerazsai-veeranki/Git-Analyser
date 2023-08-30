@@ -12,6 +12,7 @@ var cardsRouter = require('./routes/cards');
 var followersRouter = require('./routes/followers');
 var followingRouter = require('./routes/following');
 var fandfRouter = require('./routes/fandf');
+var aboutRouter = require('./routes/about');
 
 var repoDetailsRouter = require('./routes/repoDetails');
 
@@ -37,6 +38,7 @@ app.use('/followers',followersRouter);
 app.use('/following',followingRouter);
 app.use('/fandf',fandfRouter);
 app.use('/repodetails', repoDetailsRouter);
+app.use('/aboutus', aboutRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
