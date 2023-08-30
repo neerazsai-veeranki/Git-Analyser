@@ -360,3 +360,13 @@ body {
     text-align: center;
     /* background-color: #b6b6b8; */
   }
+
+  .container {
+    margin-top: 20px;
+  }
+  .page {
+    display: none;
+  }
+  .page-active {
+    display: block;
+  }

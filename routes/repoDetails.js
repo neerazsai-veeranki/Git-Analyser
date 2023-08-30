@@ -35,7 +35,7 @@ router.get('/commits', async function(req, res, next) {
   await request(options, (error, response, body)=> {
     if (!error && response.statusCode === 200) {
       const result = JSON.parse(body)
-      // console.log(result)
+      console.log(result)
       res.render('commits', { result });
     } else {
       console.log("Got an error: ", error, ", status code: ", response.statusCode)
