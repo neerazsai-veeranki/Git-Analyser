@@ -10,7 +10,8 @@ router.get('/', async function(req, res, next) {
   var options = {
     url: process.env.GET_USER+req.query.id+'/repos',
     headers: {
-      'User-Agent': 'request'
+      'User-Agent': 'request',
+      'Authorization': `Bearer ${process.env.TOKEN}`
     }
   };
 
