@@ -25,9 +25,12 @@ router.post('/getProfiles', async function(req, res) {
   var options = {
     url: process.env.LIST_USERS+req.body.keyword,
     headers: {
-      'User-Agent': 'request'
+      'User-Agent': 'request',
+      'Authorization': `Bearer ${process.env.TOKEN}`
     }
   };
+
+  console.log(options)
   
   await request(options, (error, response, body)=> {
     if (!error && response.statusCode === 200) {
