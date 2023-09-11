@@ -32,16 +32,16 @@ block content
                      span   #{result.location} 
                   br
                   div
-                     a(href="#")
+                     a(href='/followers?id='+result.login)
                          i.material-icons.inline-icon people 
                          span  #{result.followers} Followers 
-                     a(href="#") 
+                     a(href='/following?id='+result.login) 
                          i.material-icons.inline-icon person_add 
                          span  #{result.following} Following 
                   div
                      a(href='/viewRepos?id='+result.login)
                          i.material-icons.inline-icon source 
-                         span  #{result.public_repos} Repositories            
+                         span  #{result.public_repos} Repositories          
                                 
 
       p.footer Copyright © 2023 My GitHub Analyser

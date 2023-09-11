@@ -1,7 +1,63 @@
-extends layout
 
-block content
-  h1 My Following Page
-  .container.pt-3.my-3.bg-dark.text-white
-    h3 Following Details 
+extends header
+
+block content 
+
+    include header 
+    br
+    br
+    h1 Following
+    br
+    each item in result
+        a.card(href='/viewProfile?id='+item.login)
+          .card-body
+            .row
+              .d-flex.text-black
+                .flex-shrink-0
+                  img.rounded-circle(
+                    style="width: 80px; border-radius: 5px;" 
+                    alt="Generic placeholder image" 
+                    src=item.avatar_url
+                    )
+              .col
+                h5.card-title= item.login
+                p.card-text= item.id
+
+    button.btn.btn-primary#load-more Load More
     
+    p .   
+    p .   
+    p .   
+    
+    p.footer Copyright © 2023 My GitHub Analyser
+
+    //- script(src='/js/load-more.js')
+    script.
+      var itemList = document.getElementById('item-list');
+      var loadMoreBtn = document.getElementById('load-more');
+      var page = 1; // current page number
+      var perPage = 5; // number of items to load per page
+
+      function fetchMoreItems() {
+        // Make an API request to fetch more items
+        var url = process.env.GET_USER+req.query.id+'/followers?page=2' 
+        fetch(`/api/items?page=${page}&perPage=${perPage}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.length > 0) {
+              data.forEach(item => {
+                var li = document.createElement('li');
+                li.textContent = item.name;
+                itemList.appendChild(li);
+              });
+              page++;
+            } else {
+              loadMoreBtn.style.display = 'none';
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
+      }
+
+      loadMoreBtn.addEventListener('click', fetchMoreItems);
