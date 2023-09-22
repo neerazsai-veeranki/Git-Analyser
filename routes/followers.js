@@ -20,12 +20,12 @@ router.get('/', async function(req, res, next) {
       // console.log(result)
       console.log(response.headers.link)
 
-      const arr = response.headers.link.split('>; rel="next",')
-      const next = arr[0].substring(1, arr[0].length)
-      const temp = arr[1].split('>; rel="last"')
-      const last = temp[0].substring(2, temp[0].length)
-      console.log(next)
-      console.log(last)
+      // const arr = response.headers.link.split('>; rel="next",')
+      // const next = arr[0].substring(1, arr[0].length)
+      // const temp = arr[1].split('>; rel="last"')
+      // const last = temp[0].substring(2, temp[0].length)
+      // console.log(next)
+      // console.log(last)
 
       res.render('followers', { result });
     } else {

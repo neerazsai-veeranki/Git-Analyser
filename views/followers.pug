@@ -1,63 +1,104 @@
-
-extends header
-
-block content 
-
-    include header 
-    br
-    br
-    h1 Followers
-    br
-    each item in result
-        a.card(href='/viewProfile?id='+item.login)
-          .card-body
-            .row
-              .d-flex.text-black
-                .flex-shrink-0
-                  img.rounded-circle(
-                    style="width: 80px; border-radius: 5px;" 
-                    alt="Generic placeholder image" 
-                    src=item.avatar_url
-                    )
-              .col
-                h5.card-title= item.login
-                p.card-text= item.id
-
-    button.btn.btn-primary#load-more Load More
-    
-    p .   
-    p .   
-    p .   
-    
-    p.footer Copyright © 2023 My GitHub Analyser
-
-    //- script(src='/js/load-more.js')
-    script.
-      var itemList = document.getElementById('item-list');
-      var loadMoreBtn = document.getElementById('load-more');
-      var page = 1; // current page number
-      var perPage = 5; // number of items to load per page
-
-      function fetchMoreItems() {
-        // Make an API request to fetch more items
-        var url = process.env.GET_USER+req.query.id+'/followers?page=2' 
-        fetch(`/api/items?page=${page}&perPage=${perPage}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data.length > 0) {
-              data.forEach(item => {
-                var li = document.createElement('li');
-                li.textContent = item.name;
-                itemList.appendChild(li);
-              });
-              page++;
-            } else {
-              loadMoreBtn.style.display = 'none';
-            }
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error);
-          });
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title GitHub Followers Scroll
+    script(src="https://code.jquery.com/jquery-3.6.0.min.js")
+    style.
+      h3{
+           padding: 20px;
+           text-align: center;
+      }
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f0f0f0;
+          margin: 0;
+          padding: 0;
+      }
+      #follower-list {
+          list-style: none;
+          padding: 0;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+      }
+      .follower-card {
+          background-color: #fff;
+          border-radius: 4px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          margin: 10px;
+          width: 200px;
+          padding: 10px;
+          text-align: center;
+      }
+      .follower-avatar {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          margin: 0 auto 10px;
+          display: block;
+      }
+      .follower-details h3 {
+          margin: 0;
+          font-size: 18px;
+      }
+      .follower-details p {
+          margin: 0;
+          color: #666;
       }
 
-      loadMoreBtn.addEventListener('click', fetchMoreItems);
+  body
+  h3 Followers List 
+    ul#follower-list
+  
+  script.
+    $(document).ready(function () {
+        let page = 1;
+        const perPage = 50;
+        let loading = false;
+        let allFollowersLoaded = false;
+
+        function createFollowerCard(follower) {
+            return `
+                <div class="follower-card">
+                    <img src="${follower.avatar_url}" alt="${follower.login}" class="follower-avatar">
+                    <div class="follower-details">
+                        <a href="./viewProfile?id=${follower.login}">${follower.login}</a>
+                        <br>
+                        <a href="./viewProfile?id=${follower.login}">ID: ${follower.id}</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function fetchFollowers() {
+            if (loading || allFollowersLoaded) return;
+            loading = true;
+
+            $.get(`https://api.github.com/users/ritwickdey/followers?page=${page}&per_page=${perPage}`)
+                .done(function (data) {
+                    if (data.length === 0) {
+                        allFollowersLoaded = true;
+                    } else {
+                        data.forEach(function (follower) {
+                            const cardHTML = createFollowerCard(follower);
+                            $('#follower-list').append(cardHTML);
+                        });
+                        page++;
+                    }
+                    loading = false;
+                })
+                .fail(function (error) {
+                    console.error('Error fetching data:', error);
+                    loading = false;
+                });
+        }
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+                fetchFollowers();
+            }
+        });
+
+        fetchFollowers();
+    });
