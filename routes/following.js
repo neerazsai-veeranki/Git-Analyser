@@ -4,15 +4,16 @@ var request = require('request');
 
 
 router.get('/', async function(req, res, next) {
+  console.log(req.query.id);
   var options = {
     url: process.env.GET_USER+req.query.id+'/following',
     headers: {
       'User-Agent': 'request',
-      'Authorization': `Bearer ${process.env.TOKEN}`
+      // 'Authorization': `Bearer ${process.env.TOKEN}`
     }
   };
 
-  console.log(options.url)
+  // console.log(options.url)
 
   await request(options, (error, response, body)=> {
     if (!error && response.statusCode === 200) {
@@ -26,7 +27,7 @@ router.get('/', async function(req, res, next) {
         res.render('emptyPage', { result });
       } else {
         console.log('there')
-        res.render('following', { result });
+        res.render('following', { userId: req.query.id });
       }
     } else {
       console.log("Got an error: ", error, ", status code: ", response.statusCode)

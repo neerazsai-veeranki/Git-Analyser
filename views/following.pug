@@ -2,13 +2,9 @@ html(lang="en")
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title GitHub Following Scroll
+    title GitHub followings Infinite Scroll
     script(src="https://code.jquery.com/jquery-3.6.0.min.js")
     style.
-      h3{
-           padding: 20px;
-           text-align: center;
-      }
       body {
           font-family: Arial, sans-serif;
           background-color: #f0f0f0;
@@ -48,22 +44,26 @@ html(lang="en")
       }
 
   body
-   h3 Following List 
     ul#following-list
- 
+
   script.
     $(document).ready(function () {
         let page = 1;
         const perPage = 50;
         let loading = false;
-        let allFollowingLoaded = false;
+        let allfollowingsLoaded = false;
+        
+        // Use the userId variable passed from the server
+        var userId = "#{userId}";
 
-        function createFollowingCard(following) {
+        function createfollowingCard(following) {
+            //- console.log(following);
+            //- f=following;
             return `
                 <div class="following-card">
                     <img src="${following.avatar_url}" alt="${following.login}" class="following-avatar">
                     <div class="following-details">
-                        <a href="./viewProfile?id=${following.login}">${following.login}</a>
+                       <a href="./viewProfile?id=${following.login}">${following.login}</a>
                         <br>
                         <a href="./viewProfile?id=${following.login}">ID: ${following.id}</a>
                     </div>
@@ -71,17 +71,17 @@ html(lang="en")
             `;
         }
 
-        function fetchFollowing() {
-            if (loading || allFollowingLoaded) return;
+        function fetchfollowings() {
+            if (loading || allfollowingsLoaded) return;
             loading = true;
-
-            $.get(`https://api.github.com/users/ritwickdey/following?page=${page}&per_page=${perPage}`)
+            
+            $.get(`https://api.github.com/users/${userId}/following?page=${page}&per_page=${perPage}`)
                 .done(function (data) {
                     if (data.length === 0) {
-                        allFollowingLoaded = true;
+                        allfollowingsLoaded = true;
                     } else {
                         data.forEach(function (following) {
-                            const cardHTML = createFollowingCard(following);
+                            const cardHTML = createfollowingCard(following);
                             $('#following-list').append(cardHTML);
                         });
                         page++;
@@ -96,9 +96,10 @@ html(lang="en")
 
         $(window).scroll(function () {
             if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
-                fetchFollowing();
+                fetchfollowings();
             }
         });
 
-        fetchFollowing();
+        fetchfollowings();
     });
+

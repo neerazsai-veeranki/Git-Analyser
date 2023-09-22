@@ -2,13 +2,9 @@ html(lang="en")
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title GitHub Followers Scroll
+    title GitHub Followers Infinite Scroll
     script(src="https://code.jquery.com/jquery-3.6.0.min.js")
     style.
-      h3{
-           padding: 20px;
-           text-align: center;
-      }
       body {
           font-family: Arial, sans-serif;
           background-color: #f0f0f0;
@@ -48,17 +44,21 @@ html(lang="en")
       }
 
   body
-  h3 Followers List 
     ul#follower-list
-  
+
   script.
     $(document).ready(function () {
         let page = 1;
         const perPage = 50;
         let loading = false;
         let allFollowersLoaded = false;
+        
+        // Use the userId variable passed from the server
+        var userId = "#{userId}";
 
         function createFollowerCard(follower) {
+            //- console.log(follower);
+            //- f=follower;
             return `
                 <div class="follower-card">
                     <img src="${follower.avatar_url}" alt="${follower.login}" class="follower-avatar">
@@ -74,8 +74,8 @@ html(lang="en")
         function fetchFollowers() {
             if (loading || allFollowersLoaded) return;
             loading = true;
-
-            $.get(`https://api.github.com/users/ritwickdey/followers?page=${page}&per_page=${perPage}`)
+            
+            $.get(`https://api.github.com/users/${userId}/followers?page=${page}&per_page=${perPage}`)
                 .done(function (data) {
                     if (data.length === 0) {
                         allFollowersLoaded = true;
