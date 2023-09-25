@@ -8,9 +8,12 @@ router.get('/', async function(req, res, next) {
   var options = {
     url: process.env.GET_USER+req.query.id,
     headers: {
-      'User-Agent': 'request'
+      'User-Agent': 'request',
+      'Authorization': `Bearer ${process.env.TOKEN}`
     }
   };
+
+  console.log(options)
 
   await request(options, (error, response, body)=> {
     if (!error && response.statusCode === 200) {

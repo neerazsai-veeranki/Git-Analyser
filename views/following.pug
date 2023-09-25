@@ -1,7 +1,105 @@
-extends layout
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title GitHub followings Infinite Scroll
+    script(src="https://code.jquery.com/jquery-3.6.0.min.js")
+    style.
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f0f0f0;
+          margin: 0;
+          padding: 0;
+      }
+      #following-list {
+          list-style: none;
+          padding: 0;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+      }
+      .following-card {
+          background-color: #fff;
+          border-radius: 4px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          margin: 10px;
+          width: 200px;
+          padding: 10px;
+          text-align: center;
+      }
+      .following-avatar {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          margin: 0 auto 10px;
+          display: block;
+      }
+      .following-details h3 {
+          margin: 0;
+          font-size: 18px;
+      }
+      .following-details p {
+          margin: 0;
+          color: #666;
+      }
 
-block content
-  h1 My Following Page
-  .container.pt-3.my-3.bg-dark.text-white
-    h3 Following Details 
-    
+  body
+    ul#following-list
+
+  script.
+    $(document).ready(function () {
+        let page = 1;
+        const perPage = 50;
+        let loading = false;
+        let allfollowingsLoaded = false;
+        
+        // Use the userId variable passed from the server
+        var userId = "#{userId}";
+
+        function createfollowingCard(following) {
+            //- console.log(following);
+            //- f=following;
+            return `
+                <div class="following-card">
+                    <img src="${following.avatar_url}" alt="${following.login}" class="following-avatar">
+                    <div class="following-details">
+                       <a href="./viewProfile?id=${following.login}">${following.login}</a>
+                        <br>
+                        <a href="./viewProfile?id=${following.login}">ID: ${following.id}</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function fetchfollowings() {
+            if (loading || allfollowingsLoaded) return;
+            loading = true;
+            
+            $.get(`https://api.github.com/users/${userId}/following?page=${page}&per_page=${perPage}`)
+                .done(function (data) {
+                    if (data.length === 0) {
+                        allfollowingsLoaded = true;
+                    } else {
+                        data.forEach(function (following) {
+                            const cardHTML = createfollowingCard(following);
+                            $('#following-list').append(cardHTML);
+                        });
+                        page++;
+                    }
+                    loading = false;
+                })
+                .fail(function (error) {
+                    console.error('Error fetching data:', error);
+                    loading = false;
+                });
+        }
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+                fetchfollowings();
+            }
+        });
+
+        fetchfollowings();
+    });
+
