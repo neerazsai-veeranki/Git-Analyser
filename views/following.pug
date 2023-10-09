@@ -1,106 +1,383 @@
+doctype html
+include header 
+p.footer Copyright © 2023 My GitHub Analyser
 html(lang="en")
+
   head
+
     meta(charset="UTF-8")
+
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title GitHub followings Infinite Scroll
+
+    title GitHub Followers Infinite Scroll
+
     script(src="https://code.jquery.com/jquery-3.6.0.min.js")
+
     style.
+
       body {
-          font-family: Arial, sans-serif;
-          background-color: #f0f0f0;
-          margin: 0;
-          padding: 0;
+
+        font-family: Arial;
+
+        background-color: #f0f0f0;
+
+        margin: 0;
+
+        padding: 0;
+
       }
+
+ 
+
       #following-list {
-          list-style: none;
-          padding: 0;
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
+
+        list-style: none;
+
+        padding: 0;
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+        justify-content: center;
+
       }
+
+ 
+
       .following-card {
-          background-color: #fff;
-          border-radius: 4px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          margin: 10px;
-          width: 200px;
-          padding: 10px;
-          text-align: center;
+
+        background-color: #fff;
+
+        border-radius: 4px;
+
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        margin: 10px;
+
+        width: 200px;
+
+        padding: 10px;
+
+        text-align: center;
+
       }
+
+ 
+
       .following-avatar {
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          margin: 0 auto 10px;
-          display: block;
+
+        width: 80px;
+
+        height: 80px;
+
+        border-radius: 50%;
+
+        margin: 0 auto 10px;
+
+        display: block;
+
       }
+
+ 
+
       .following-details h3 {
-          margin: 0;
-          font-size: 18px;
+
+        margin: 0;
+
+        font-size: 18px;
+
       }
+
+ 
+
       .following-details p {
-          margin: 0;
-          color: #666;
+
+        margin: 0;
+
+        color: #666;
+
+      }
+
+ 
+
+      .search-bar {
+
+        display: flex;
+
+        align-items: center;
+
+        margin: 10px;
+
+        padding: 5px;
+
+        border: 1px solid #007BFF; /* Blue border */
+
+        border-radius: 5px;
+
+        width: 300px;
+
+        background-color: white;
+
+      }
+
+ 
+
+      .search-bar input[type="text"] {
+
+        border: none;
+
+        outline: none;
+
+        flex: 1;
+
+        padding: 5px;
+
+      }
+
+ 
+
+      .search-icon {
+
+        padding: 5px;
+
+        color: #007BFF;
+
+        cursor: pointer;
+
+      }
+
+      /* Add CSS for the sorting dropdown */
+
+      select#sort-followings.sort-dropdown {
+
+        position: absolute;
+
+        top: 125px;
+
+        right: 10px;
+
+        z-index: 1; /* Ensure it's above other content */
+
       }
 
   body
+
+    div.search-bar
+
+      input(type="text", id="following-search", placeholder="Search followings...")
+
+      select#sort-followings.sort-dropdown
+
+        option(value="asc-id") Sort by Ascending ID
+
+        option(value="desc-id") Sort by Descending ID
+
+        option(value="asc-name") Sort by Ascending Name (A-Z)
+
+        option(value="desc-name") Sort by Descending Name
+
+      div.search-icon(onclick="searchFollowings()") 🔍
+
     ul#following-list
 
   script.
+
     $(document).ready(function () {
+
         let page = 1;
+
         const perPage = 50;
+
         let loading = false;
-        let allfollowingsLoaded = false;
-        
-        // Use the userId variable passed from the server
+
+        let allFollowingsLoaded = false;
+
+        let followings = [];
+
         var userId = "#{userId}";
 
-        function createfollowingCard(following) {
-            //- console.log(following);
-            //- f=following;
+        function createFollowingCard(following) {
+
             return `
+
                 <div class="following-card">
+
                     <img src="${following.avatar_url}" alt="${following.login}" class="following-avatar">
+
                     <div class="following-details">
-                       <a href="./viewProfile?id=${following.login}">${following.login}</a>
+
+                        <a href="./viewProfile?id=${following.login}">${following.login}</a>
+
                         <br>
+
                         <a href="./viewProfile?id=${following.login}">ID: ${following.id}</a>
+
                     </div>
+
                 </div>
+
             `;
+
         }
 
-        function fetchfollowings() {
-            if (loading || allfollowingsLoaded) return;
+        function fetchFollowings() {
+
+            if (loading || allFollowingsLoaded) return;
+
             loading = true;
-            
-            $.get(`https://api.github.com/users/${userId}/following?page=${page}&per_page=${perPage}`)
-                .done(function (data) {
-                    if (data.length === 0) {
-                        allfollowingsLoaded = true;
-                    } else {
-                        data.forEach(function (following) {
-                            const cardHTML = createfollowingCard(following);
-                            $('#following-list').append(cardHTML);
-                        });
-                        page++;
-                    }
-                    loading = false;
-                })
-                .fail(function (error) {
-                    console.error('Error fetching data:', error);
-                    loading = false;
-                });
-        }
 
+            $.get(`https://api.github.com/users/${userId}/following?page=${page}&per_page=${perPage}`)
+
+                .done(function (data) {
+
+                    if (data.length === 0) {
+
+                        allFollowingsLoaded = true;
+
+                    } else {
+
+                        data.forEach(function (following) {
+
+                            const cardHTML = createFollowingCard(following);
+
+                            $('#following-list').append(cardHTML);
+
+                        });
+
+                        followings = followings.concat(data);
+
+                        page++;
+
+                    }
+
+                    loading = false;
+
+                })
+
+                .fail(function (error) {
+
+                    console.error('Error fetching data:', error);
+
+                    loading = false;
+
+                });
+
+        }
         $(window).scroll(function () {
+
             if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
-                fetchfollowings();
+
+                fetchFollowers();
+
             }
+
         });
 
-        fetchfollowings();
-    });
-//-   p.footer Copyright © 2023 My GitHub Analyser
+        function filterFollowings(query) {
 
+            const filteredFollowings = followings.filter(function (following) {
+
+                return following.login.toLowerCase().includes(query.toLowerCase());
+
+            });
+
+            $('#following-list').empty();
+
+            filteredFollowings.forEach(function (following) {
+
+                const cardHTML = createFollowingCard(following);
+
+                $('#following-list').append(cardHTML);
+
+            });
+
+        }
+
+        function searchFollowings() {
+
+            const query = $('#following-search').val();
+
+            filterFollowings(query);
+
+        }
+
+        $('#following-search').on('keyup', function (e) {
+
+            if (e.key === 'Enter') {
+
+                searchFollowings();
+
+            } else if (e.key === 'Backspace' && $('#following-search').val() === '') {
+
+                $('#following-list').empty();
+
+                followings = [];
+
+                page = 1;
+
+                allFollowingsLoaded = false;
+
+                fetchFollowings();
+
+            }
+
+        });
+
+        $('#sort-followings').on('change', function () {
+
+            const selectedOption = $(this).val();
+
+            sortFollowings(selectedOption);
+
+        });
+
+        function sortFollowings(option) {
+
+            switch (option) {
+
+                case 'asc-id':
+
+                    followings.sort((a, b) => a.id - b.id);
+
+                    break;
+
+                case 'desc-id':
+
+                    followings.sort((a, b) => b.id - a.id);
+
+                    break;
+
+                case 'asc-name':
+
+                    followings.sort((a, b) => a.login.localeCompare(b.login));
+
+                    break;
+
+                case 'desc-name':
+
+                    followings.sort((a, b) => b.login.localeCompare(a.login));
+
+                    break;
+
+                default:
+
+                    break;
+
+            }
+
+            $('#following-list').empty();
+
+            followings.forEach(function (following) {
+
+                const cardHTML = createFollowingCard(following);
+
+                $('#following-list').append(cardHTML);
+
+            });
+
+        }
+
+        fetchFollowings();
+
+    });
