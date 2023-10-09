@@ -9,7 +9,7 @@ router.get('/', async function(req, res, next) {
     url: process.env.GET_USER+req.query.id+'/following',
     headers: {
       'User-Agent': 'request',
-      // 'Authorization': `Bearer ${process.env.TOKEN}`
+      'Authorization': `Bearer ${process.env.TOKEN}`
     }
   };
 
