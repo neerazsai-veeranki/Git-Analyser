@@ -42,6 +42,7 @@ router.get('/commits', async function(req, res, next) {
     } else {
       console.log("Got an error: ", error, ", status code: ", response.statusCode)
     }
+    
   })
   
 });

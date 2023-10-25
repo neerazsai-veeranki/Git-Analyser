@@ -33,6 +33,7 @@ router.get('/', async function(req, res, next) {
  
 
   await request(options, (error, response, body)=> {
+<<<<<<< Updated upstream
 
     if (!error && response.statusCode === 200) {
 
@@ -48,7 +49,17 @@ router.get('/', async function(req, res, next) {
 
     }
 
+=======
+    const arr = response.headers.link.split('>; rel="next",')
+    const next = arr[0].substring(1, arr[0].length)
+    const temp = arr[1].split('>; rel="last"')
+    const last = temp[0].substring(2, temp[0].length)
+    console.log(next)
+    console.log(last)
+    
+>>>>>>> Stashed changes
   })
+  
 
  
 
