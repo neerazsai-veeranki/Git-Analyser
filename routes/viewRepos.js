@@ -33,23 +33,6 @@ router.get('/', async function(req, res, next) {
  
 
   await request(options, (error, response, body)=> {
-<<<<<<< Updated upstream
-
-    if (!error && response.statusCode === 200) {
-
-      const result = JSON.parse(body)
-
-      let owner = result[0].owner.login;
-
-      res.render('viewRepos', { owner });
-
-    } else {
-
-      console.log("Got an error: ", error, ", status code: ", response.statusCode)
-
-    }
-
-=======
     const arr = response.headers.link.split('>; rel="next",')
     const next = arr[0].substring(1, arr[0].length)
     const temp = arr[1].split('>; rel="last"')
@@ -57,7 +40,6 @@ router.get('/', async function(req, res, next) {
     console.log(next)
     console.log(last)
     
->>>>>>> Stashed changes
   })
   
 
