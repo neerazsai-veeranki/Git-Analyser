@@ -1,47 +1,293 @@
-extends header 
+extends layout
 
 block content
-
-    include header 
-    br
-    br
-    div.container
+  include header
+  br
+  br
+  div#container
     .container.py-5.h-100
-      m.row.d-flex.justify-content-center.align-items-center.h-100
-       .col-8
-        .card(style="border-radius: 15px;")
-          .card-body.p-4
-            .d-flex.text-black
-              .flex-shrink-0
-                img.rounded-circle(
-                  style="width: 180px; border-radius: 10px;" 
-                  alt="Generic placeholder image" 
-                  src=result.avatar_url
+      .row.d-flex.justify-content-center.align-items.align-items-center.h-100
+        .col-8
+          .card(style="border-radius: 15px;")
+            .card-body.p-4
+              .d-flex.text-black
+                .flex-shrink-0
+                  img.rounded-circle(
+                    style="width: 180px; border-radius: 10px;"
+                    alt="Generic placeholder image"
+                    src=result.avatar_url
                   )
-              .flex-grow-12.ms-12
-               .col-12
+                .flex-grow-12.ms-12
+                .col-12
                   h5.mb-1 #{result.login}
                   div
-                     i.material-icons.inline-icon format_list_bulleted
-                     span   #{result.bio}
+                    i.material-icons.inline-icon format_list_bulleted
+                    span #{result.bio }
                   div
-                     i.material-icons.inline-icon verified_user
-                     span   #{result.login}
-                  div 
-                     i.material-icons.inline-icon place
-                     span   #{result.location} 
+                    i.material-icons.inline-icon verified_user
+                    span #{result.login}
+                  div
+                    i.material-icons.inline-icon place
+                    span #{result.location }
                   br
                   div
-                     a(href='/followers?id='+result.login)
-                         i.material-icons.inline-icon people 
-                         span  #{result.followers} Followers 
-                     a(href='/following?id='+result.login) 
-                         i.material-icons.inline-icon person_add 
-                         span  #{result.following} Following 
-                  div
-                     a(href='/viewRepos?id='+result.login)
-                         i.material-icons.inline-icon source 
-                         span  #{result.public_repos} Repositories          
-                                
+                    a(href='/followers?id='+result.login)
+                      i.material-icons.inline-icon people
+                      span #{result.followers} Followers
+                    a(href='/following?id='+result.login)
+                      i.material-icons.inline-icon person_add
+                      span #{result.following} Following
+                    a(href='/viewRepos?id='+result.login)
+                      i.material-icons.inline-icon source
+                      span #{result.public_repos} Repositories
+                      br
+                      br
+                    div.d-flex.justify-content-center
+                      a#generateReportButton(href="javascript:void(0);", class="btn btn-primary", onclick=`generateReport(${JSON.stringify(result)})`)
+                        | Generate Report
+                      a#generateGraphButton.btn.btn-primary.ms-2(onclick=`generateBarGraphFromData('${result.login}')`)
+                        | Generate Bar graph
+  div
+    canvas#commitActivityChart(width="400", height="200")
+  script(src="https://cdn.jsdelivr.net/npm/chart.js")
+  p.footer Copyright © 2023 My GitHub Analyzer
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js")
+  script.
+    async function generateReport(result) {
+      const githubUsername = result.login;
+      const githubToken = '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'; // Replace with your GitHub personal access token
 
-      p.footer Copyright © 2023 My GitHub Analyser
+      const headers = new Headers();
+      headers.append('Authorization', `token ${githubToken}`);
+
+      try {
+        // Fetch user's repositories
+        let page = 1;
+        let allRepositories = [];
+
+        while (true) {
+          const repositoriesResponse = await fetch(`https://api.github.com/users/${githubUsername}/repos?page=${page}`, { headers });
+          if (repositoriesResponse.status === 200) {
+            const repositories = await repositoriesResponse.json();
+            if (repositories.length === 0) {
+              break;
+            }
+            allRepositories.push(...repositories);
+            page++;
+          } else {
+            console.error('Failed to fetch repositories: ', repositoriesResponse.status);
+            break;
+          }
+        }
+
+        const numRepos = allRepositories.length;
+
+        // Calculate the number of forks
+        let numForks = 0;
+        for (const repo of allRepositories) {
+          numForks += repo.forks_count;
+        }
+
+        // Calculate the number of commits, issues, and pull requests
+        let numCommits = 0;
+        let numIssues = 0;
+        let numPullRequests = 0;
+
+        for (const repo of allRepositories) {
+          const commitsResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repo.name}/commits`, { headers });
+          const issuesResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repo.name}/issues`, { headers });
+          const pullRequestsResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repo.name}/pulls`, { headers });
+
+          const commits = await commitsResponse.json();
+          const issues = await issuesResponse.json();
+          const pullRequests = await pullRequestsResponse.json();
+
+          numCommits += commits.length;
+          numIssues += issues.length;
+          numPullRequests += pullRequests.length;
+        }
+
+        const reportData = {
+          name: githubUsername,
+          avatar_url: result.avatar_url,
+          totalRepos: numRepos,
+          totalFollowers: result.followers,
+          totalFollowing: result.following,
+          totalPullRequests: numPullRequests,
+          totalIssues: numIssues,
+          totalForks: numForks,
+          totalCommits: numCommits,
+          bio: result.bio || 'N/A',
+          location: result.location || 'N/A',
+          dateJoined: new Date(result.created_at).toLocaleDateString() || 'N/A',
+          yearsActive: calculateYearsActive(result.created_at),
+        };
+
+        const dHTML = createHTML(reportData);
+        const reportContainer = document.createElement('div');
+        reportContainer.innerHTML = dHTML;
+
+        const userAvatar = reportContainer.querySelector('#userAvatar');
+        userAvatar.onload = function () {
+          generatePDF(reportContainer);
+        };
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    async function generateBarGraphFromData(githubUsername) {
+        console.log('Generating Bar Graph');
+      
+        const headers = new Headers();
+        headers.append('Authorization', `token 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`);
+      
+        try {
+          // Fetch commit activity data
+          const commitActivityResponse = await fetch(`https://api.github.com/users/${githubUsername}/events`, { headers });
+      
+          if (commitActivityResponse.status === 200) {
+            const commitActivity = await commitActivityResponse.json();
+            console.log('Commit Activity:', commitActivity);
+      
+            // Extract commit information from various event types
+            const commitData = commitActivity
+              .map(event => {
+                if (event.type === 'PushEvent' && event.payload && event.payload.commits) {
+                  return {
+                    date: event.created_at,
+                    commitCount: event.payload.commits.length
+                  };
+                } else if (event.type === 'PullRequestEvent') {
+                  // Handle PullRequestEvent or other event types as needed
+                  // For now, we'll set commitCount to 0 for non-PushEvent types
+                  return {
+                    date: event.created_at,
+                    commitCount: 0
+                  };
+                }
+                // You can add more conditions for different event types
+      
+                return null; // Ignore events that don't contain commit information
+              })
+              .filter(commit => commit !== null); // Filter out null values
+      
+            console.log('Commit Data:', commitData);
+      
+            // Now you can use commitData to generate the bar graph
+            generateBarGraph(commitData, githubUsername);
+          } else {
+            console.error('Failed to fetch commit activity: ', commitActivityResponse.status);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+
+
+
+
+
+    function generateBarGraph(commitActivity, githubUsername) {
+         try {
+           // Use the commitActivity data to generate the bar graph
+           const ctx = document.getElementById('commitActivityChart').getContext('2d');
+       
+           const data = {
+             labels: commitActivity.map(entry => entry.created_at),
+             datasets: [{
+               label: 'Commits',
+               data: commitActivity.map(entry => entry.payload.commits.length),
+               backgroundColor: 'rgba(75, 192, 192, 0.2)',
+               borderColor: 'rgba(75, 192, 192, 1)',
+               borderWidth: 1
+             }]
+           };
+       
+           const options = {
+             scales: {
+               x: {
+                 type: 'time',
+                 time: {
+                   unit: 'day'
+                 }
+               },
+               y: {
+                 beginAtZero: true
+               }
+             }
+           };
+       
+           const config = {
+             type: 'bar',
+             data: data,
+             options: options
+           };
+       
+           const commitActivityChart = new Chart(ctx, config);
+         } catch (error) {
+           console.error(error);
+         }
+        //-  console.log(entry);
+    }    
+
+
+
+    
+    function createHTML(reportData) {
+      return `
+        <html>
+          <head></head>
+          <body>
+            <div style="margin-left: 30px;">
+              <h1 style="font-size: 24px;">User Details</h1>
+              <img src="${reportData.avatar_url}" id="userAvatar" style="width: 100px; height: 100px; border-radius: 50%;" alt="Avatar">
+              <p><strong>Name:</strong> ${reportData.name}</p>
+              <p><strong>Repositories:</strong> ${reportData.totalRepos}</p>
+              <p><strong>Followers:</strong> ${reportData.totalFollowers}</p>
+              <p><strong>Following:</strong> ${reportData.totalFollowing}</p>
+              <p><strong>Pull Requests:</strong> ${reportData.totalPullRequests}</p>
+              <p><strong>Issues:</strong> ${reportData.totalIssues}</p>
+              <p><strong>Forks:</strong> ${reportData.totalForks}</p>
+              <p><strong>Commits:</strong> ${reportData.totalCommits}</p>
+              <p><strong>Bio:</strong> ${reportData.bio}</p>
+              <p><strong>Location:</strong> ${reportData.location}</p>
+              <p><strong>Date Joined:</strong> ${reportData.dateJoined}</p>
+              <p><strong>Years Active:</strong> ${reportData.yearsActive}</p>
+            </div>
+          </body>
+        </html>`;
+    }
+
+    function calculateYearsActive(created_at) {
+      const joinedDate = new Date(created_at);
+      const currentDate = new Date();
+      const yearsActive = currentDate.getFullYear() - joinedDate.getFullYear();
+      return `${joinedDate.getFullYear()}-${currentDate.getFullYear()}`;
+    }
+
+    async function generatePDF(container) {
+      try {
+        const pdfWindow = window.open("", "_blank");
+        pdfWindow.document.open();
+        pdfWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Github Report</title>
+          </head>
+          <body>
+            ${container.innerHTML}
+          </body>
+          </html>
+        `);
+        pdfWindow.document.close();
+        pdfWindow.print();
+        pdfWindow.onafterprint = function () {
+          pdfWindow.close();
+        };
+      } catch (error) {
+        console.error(error);
+      }
+    }
