@@ -14,6 +14,9 @@ var followingRouter = require('./routes/following');
 var fandfRouter = require('./routes/fandf');
 var repoDetailsRouter = require('./routes/repoDetails');
 
+var viewCommitsRoute = require('./routes/viewCommitsRoute'); // Adjust the path as needed
+
+
 var app = express();
 
 // view engine setup
@@ -36,7 +39,7 @@ app.use('/followers',followersRouter);
 app.use('/following',followingRouter);
 app.use('/fandf',fandfRouter);
 app.use('/repodetails', repoDetailsRouter);
-
+app.use('/viewCommits', viewCommitsRoute);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

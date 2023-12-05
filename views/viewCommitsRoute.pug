@@ -1,0 +1,108 @@
+extends layout
+
+block content
+  include header
+
+  div
+    h1 View User Activity
+
+    // Dropdown for selecting years
+    label(for="yearDropdown") Choose a Year :    
+    select#yearDropdown.form-select
+      each year in years
+        option(value=year) #{year}
+
+    // Button to generate chart
+    button#generateChartButton.btn.float-right.btn-primary(onclick="generateChart()") Generate Chart
+
+    // Bar graph container
+    canvas#commitsChart(style="width: 80%; height: 400px; margin-top: 20px;")
+
+  p.footer Copyright © 2023 My GitHub Analyzer
+
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js")
+  script(src="https://cdn.jsdelivr.net/npm/chart.js")
+
+  script.
+    // Populate the years array from the server-side data
+    const years = !{JSON.stringify(years)};
+
+    async function generateChart() {
+      const githubUsername = "ritwickdey"; // Replace with the GitHub username
+      const selectedYear = document.getElementById("yearDropdown").value;
+
+      // Fetch commits data for the selected year
+      const commitsResponse = await fetch(`https://api.github.com/users/${githubUsername}/events`);
+
+      if (!commitsResponse.ok) {
+        console.error("Failed to fetch commits data:", commitsResponse.status, commitsResponse.statusText);
+        return;
+      }
+
+      const commitsData = await commitsResponse.json();
+
+      // Log the fetched commits data and the selected year
+      console.log("Commits data:", commitsData);
+      console.log("Selected Year:", selectedYear);
+
+      // Process commits data and create a dataset for Chart.js
+      const commitData = getCommitData(commitsData, selectedYear);
+
+      if (commitData.labels.length === 0) {
+        console.warn("No commits found for the selected year.");
+        return;
+      }
+
+      // Chart.js configuration
+      const ctx = document.getElementById("commitsChart").getContext("2d");
+      const commitsChart = new Chart(ctx, {
+        type: "bar",
+        data: commitData,
+        options: {
+          scales: {
+            x: {
+              type: "category",
+              labels: commitData.labels,
+            },
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+    }
+
+    function getCommitData(events, selectedYear) {
+      const commitData = {
+        labels: [],
+        datasets: [
+          {
+            label: "Commits",
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+            data: [],
+          },
+        ],
+      };
+
+      events.forEach((event) => {
+        const eventDate = new Date(event.created_at);
+        const eventYear = eventDate.getFullYear();
+        const eventMonth = eventDate.getMonth() + 1; // Month is zero-based
+
+        if (eventYear.toString() === selectedYear) {
+          const monthLabel = `${eventMonth < 10 ? "0" : ""}${eventMonth}`;
+          const monthIndex = commitData.labels.indexOf(monthLabel);
+
+          if (monthIndex === -1) {
+            commitData.labels.push(monthLabel);
+            commitData.datasets[0].data.push(1);
+          } else {
+            commitData.datasets[0].data[monthIndex]++;
+          }
+        }
+      });
+
+      return commitData;
+    }

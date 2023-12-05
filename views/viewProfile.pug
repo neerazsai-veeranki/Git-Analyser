@@ -45,249 +45,152 @@ block content
                     div.d-flex.justify-content-center
                       a#generateReportButton(href="javascript:void(0);", class="btn btn-primary", onclick=`generateReport(${JSON.stringify(result)})`)
                         | Generate Report
-                      a#generateGraphButton.btn.btn-primary.ms-2(onclick=`generateBarGraphFromData('${result.login}')`)
-                        | Generate Bar graph
-  div
-    canvas#commitActivityChart(width="400", height="200")
-  script(src="https://cdn.jsdelivr.net/npm/chart.js")
-  p.footer Copyright © 2023 My GitHub Analyzer
-  script(src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js")
-  script.
-    async function generateReport(result) {
-      const githubUsername = result.login;
-      const githubToken = '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'; // Replace with your GitHub personal access token
+                      a#viewCommitsButton(href="/viewCommits?id="+result.login, class="btn btn-secondary", target="_blank")
+                        | View User Activity
+                      script(src="https://cdn.plot.ly/plotly-latest.min.js")
+                      script.
+                        async function generateCommitsGraph(result) {
+                          const githubUsername = result.login;
+                          const githubToken = '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'; // Replace with your GitHub personal access token
+                          const headers = new Headers();
+                          headers.append('Authorization', `token ${githubToken}`);
+                          try {
+                            // Fetch user's repositories
+                            const repositoriesResponse = await fetch(`https://api.github.com/users/${githubUsername}/repos`, { headers });
+                            if (repositoriesResponse.status === 200) {
+                              const repositories = await repositoriesResponse.json();
+                              const commitsData = await fetchCommitsData(githubUsername, repositories, headers);
+                              generateGraph(commitsData);
+                            } else {
+                              console.error('Failed to fetch repositories: ', repositoriesResponse.status);
+                            }
+                          } catch (error) {
+                            console.error(error);
+                          }
+                        }
 
-      const headers = new Headers();
-      headers.append('Authorization', `token ${githubToken}`);
+                        async function fetchCommitsData(username, repositories, headers) {
+                          const commitsData = { months: [], counts: [] };
+                          for (const repo of repositories) {
+                            const commitsResponse = await fetch(`https://api.github.com/repos/${username}/${repo.name}/commits`, { headers });
+                            const commits = await commitsResponse.json();
+                            commits.forEach(commit => {
+                              const commitDate = new Date(commit.commit.author.date);
+                              const month = `${commitDate.getFullYear()}-${commitDate.getMonth() + 1}`;
+                              const index = commitsData.months.indexOf(month);
+                              if (index !== -1) {
+                                commitsData.counts[index]++;
+                              } else {
+                                commitsData.months.push(month);
+                                commitsData.counts.push(1);
+                              }
+                            });
+                          }
+                          return commitsData;
+                        }
 
-      try {
-        // Fetch user's repositories
-        let page = 1;
-        let allRepositories = [];
+                        function generateGraph(commitsData) {
+                          const data = [{
+                            x: commitsData.months,
+                            y: commitsData.counts,
+                            type: 'bar',
+                            marker: {
+                              color: 'rgb(0, 102, 204)',
+                            },
+                          }];
+                          const layout = {
+                            title: 'Commits Per Month',
+                            xaxis: {
+                              title: 'Month',
+                            },
+                            yaxis: {
+                              title: 'Number of Commits',
+                            },
+                          };
+                          Plotly.newPlot('commitsGraph', data, layout);
+                        }
 
-        while (true) {
-          const repositoriesResponse = await fetch(`https://api.github.com/users/${githubUsername}/repos?page=${page}`, { headers });
-          if (repositoriesResponse.status === 200) {
-            const repositories = await repositoriesResponse.json();
-            if (repositories.length === 0) {
-              break;
-            }
-            allRepositories.push(...repositories);
-            page++;
-          } else {
-            console.error('Failed to fetch repositories: ', repositoriesResponse.status);
-            break;
-          }
-        }
+                        async function generateReport(result) {
+                          const githubUsername = result.login;
+                          const githubToken = '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'; // Replace with your GitHub personal access token
 
-        const numRepos = allRepositories.length;
+                          const headers = new Headers();
+                          headers.append('Authorization', `token ${githubToken}`);
 
-        // Calculate the number of forks
-        let numForks = 0;
-        for (const repo of allRepositories) {
-          numForks += repo.forks_count;
-        }
+                          try {
+                            // Fetch user's repositories
+                            let page = 1;
+                            let allRepositories = [];
 
-        // Calculate the number of commits, issues, and pull requests
-        let numCommits = 0;
-        let numIssues = 0;
-        let numPullRequests = 0;
+                            while (true) {
+                              const repositoriesResponse = await fetch(`https://api.github.com/users/${githubUsername}/repos?page=${page}`, { headers });
+                              if (repositoriesResponse.status === 200) {
+                                const repositories = await repositoriesResponse.json();
+                                if (repositories.length === 0) {
+                                  break;
+                                }
+                                allRepositories.push(...repositories);
+                                page++;
+                              } else {
+                                console.error('Failed to fetch repositories: ', repositoriesResponse.status);
+                                break;
+                              }
+                            }
 
-        for (const repo of allRepositories) {
-          const commitsResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repo.name}/commits`, { headers });
-          const issuesResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repo.name}/issues`, { headers });
-          const pullRequestsResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repo.name}/pulls`, { headers });
+                            const numRepos = allRepositories.length;
 
-          const commits = await commitsResponse.json();
-          const issues = await issuesResponse.json();
-          const pullRequests = await pullRequestsResponse.json();
+                            // Calculate the number of forks
+                            let numForks = 0;
+                            for (const repo of allRepositories) {
+                              numForks += repo.forks_count;
+                            }
 
-          numCommits += commits.length;
-          numIssues += issues.length;
-          numPullRequests += pullRequests.length;
-        }
+                            // Calculate the number of commits, issues, and pull requests
+                            let numCommits = 0;
+                            let numIssues = 0;
+                            let numPullRequests = 0;
 
-        const reportData = {
-          name: githubUsername,
-          avatar_url: result.avatar_url,
-          totalRepos: numRepos,
-          totalFollowers: result.followers,
-          totalFollowing: result.following,
-          totalPullRequests: numPullRequests,
-          totalIssues: numIssues,
-          totalForks: numForks,
-          totalCommits: numCommits,
-          bio: result.bio || 'N/A',
-          location: result.location || 'N/A',
-          dateJoined: new Date(result.created_at).toLocaleDateString() || 'N/A',
-          yearsActive: calculateYearsActive(result.created_at),
-        };
+                            for (const repo of allRepositories) {
+                              const commitsResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repo.name}/commits`, { headers });
+                              const issuesResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repo.name}/issues`, { headers });
+                              const pullRequestsResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repo.name}/pulls`, { headers });
 
-        const dHTML = createHTML(reportData);
-        const reportContainer = document.createElement('div');
-        reportContainer.innerHTML = dHTML;
+                              const commits = await commitsResponse.json();
+                              const issues = await issuesResponse.json();
+                              const pullRequests = await pullRequestsResponse.json();
 
-        const userAvatar = reportContainer.querySelector('#userAvatar');
-        userAvatar.onload = function () {
-          generatePDF(reportContainer);
-        };
-      } catch (error) {
-        console.error(error);
-      }
-    }
+                              numCommits += commits.length;
+                              numIssues += issues.length;
+                              numPullRequests += pullRequests.length;
+                            }
 
-    async function generateBarGraphFromData(githubUsername) {
-        console.log('Generating Bar Graph');
-      
-        const headers = new Headers();
-        headers.append('Authorization', `token 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`);
-      
-        try {
-          // Fetch commit activity data
-          const commitActivityResponse = await fetch(`https://api.github.com/users/${githubUsername}/events`, { headers });
-      
-          if (commitActivityResponse.status === 200) {
-            const commitActivity = await commitActivityResponse.json();
-            console.log('Commit Activity:', commitActivity);
-      
-            // Extract commit information from various event types
-            const commitData = commitActivity
-              .map(event => {
-                if (event.type === 'PushEvent' && event.payload && event.payload.commits) {
-                  return {
-                    date: event.created_at,
-                    commitCount: event.payload.commits.length
-                  };
-                } else if (event.type === 'PullRequestEvent') {
-                  // Handle PullRequestEvent or other event types as needed
-                  // For now, we'll set commitCount to 0 for non-PushEvent types
-                  return {
-                    date: event.created_at,
-                    commitCount: 0
-                  };
-                }
-                // You can add more conditions for different event types
-      
-                return null; // Ignore events that don't contain commit information
-              })
-              .filter(commit => commit !== null); // Filter out null values
-      
-            console.log('Commit Data:', commitData);
-      
-            // Now you can use commitData to generate the bar graph
-            generateBarGraph(commitData, githubUsername);
-          } else {
-            console.error('Failed to fetch commit activity: ', commitActivityResponse.status);
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      }
+                            const reportData = {
+                              name: githubUsername,
+                              avatar_url: result.avatar_url,
+                              totalRepos: numRepos,
+                              totalFollowers: result.followers,
+                              totalFollowing: result.following,
+                              totalPullRequests: numPullRequests,
+                              totalIssues: numIssues,
+                              totalForks: numForks,
+                              totalCommits: numCommits,
+                              bio: result.bio || 'N/A',
+                              location: result.location || 'N/A',
+                              dateJoined: new Date(result.created_at).toLocaleDateString() || 'N/A',
+                              yearsActive: calculateYearsActive(result.created_at),
+                            };
 
+                            const dHTML = createHTML(reportData);
+                            const reportContainer = document.createElement('div');
+                            reportContainer.innerHTML = dHTML;
 
-
-
-
-
-    function generateBarGraph(commitActivity, githubUsername) {
-         try {
-           // Use the commitActivity data to generate the bar graph
-           const ctx = document.getElementById('commitActivityChart').getContext('2d');
-       
-           const data = {
-             labels: commitActivity.map(entry => entry.created_at),
-             datasets: [{
-               label: 'Commits',
-               data: commitActivity.map(entry => entry.payload.commits.length),
-               backgroundColor: 'rgba(75, 192, 192, 0.2)',
-               borderColor: 'rgba(75, 192, 192, 1)',
-               borderWidth: 1
-             }]
-           };
-       
-           const options = {
-             scales: {
-               x: {
-                 type: 'time',
-                 time: {
-                   unit: 'day'
-                 }
-               },
-               y: {
-                 beginAtZero: true
-               }
-             }
-           };
-       
-           const config = {
-             type: 'bar',
-             data: data,
-             options: options
-           };
-       
-           const commitActivityChart = new Chart(ctx, config);
-         } catch (error) {
-           console.error(error);
-         }
-        //-  console.log(entry);
-    }    
-
-
-
-    
-    function createHTML(reportData) {
-      return `
-        <html>
-          <head></head>
-          <body>
-            <div style="margin-left: 30px;">
-              <h1 style="font-size: 24px;">User Details</h1>
-              <img src="${reportData.avatar_url}" id="userAvatar" style="width: 100px; height: 100px; border-radius: 50%;" alt="Avatar">
-              <p><strong>Name:</strong> ${reportData.name}</p>
-              <p><strong>Repositories:</strong> ${reportData.totalRepos}</p>
-              <p><strong>Followers:</strong> ${reportData.totalFollowers}</p>
-              <p><strong>Following:</strong> ${reportData.totalFollowing}</p>
-              <p><strong>Pull Requests:</strong> ${reportData.totalPullRequests}</p>
-              <p><strong>Issues:</strong> ${reportData.totalIssues}</p>
-              <p><strong>Forks:</strong> ${reportData.totalForks}</p>
-              <p><strong>Commits:</strong> ${reportData.totalCommits}</p>
-              <p><strong>Bio:</strong> ${reportData.bio}</p>
-              <p><strong>Location:</strong> ${reportData.location}</p>
-              <p><strong>Date Joined:</strong> ${reportData.dateJoined}</p>
-              <p><strong>Years Active:</strong> ${reportData.yearsActive}</p>
-            </div>
-          </body>
-        </html>`;
-    }
-
-    function calculateYearsActive(created_at) {
-      const joinedDate = new Date(created_at);
-      const currentDate = new Date();
-      const yearsActive = currentDate.getFullYear() - joinedDate.getFullYear();
-      return `${joinedDate.getFullYear()}-${currentDate.getFullYear()}`;
-    }
-
-    async function generatePDF(container) {
-      try {
-        const pdfWindow = window.open("", "_blank");
-        pdfWindow.document.open();
-        pdfWindow.document.write(`
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>Github Report</title>
-          </head>
-          <body>
-            ${container.innerHTML}
-          </body>
-          </html>
-        `);
-        pdfWindow.document.close();
-        pdfWindow.print();
-        pdfWindow.onafterprint = function () {
-          pdfWindow.close();
-        };
-      } catch (error) {
-        console.error(error);
-      }
-    }
+                            const userAvatar = reportContainer.querySelector('#userAvatar');
+                            userAvatar.onload = function () {
+                              generatePDF(reportContainer);
+                            };
+                          } catch (error) {
+                            console.error(error);
+                          }
+                        }
+                        
+                        generateCommitsGraph(${JSON.stringify(result)});
